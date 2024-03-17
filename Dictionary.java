@@ -8,7 +8,73 @@ public class Dictionary {
 		this.root = null;
 	}
 
-	// methods for searching, deletion, and traversal (implementation not shown)
+	// methods for searching
+	public Person search(String title, string firstName, string lastName) {
+		return searchHelper(root, title, firstName, lastName);
+	}
+
+	private Person searchHelper(TreeNode node, String title, String firstName, String lastName) {
+		if (node == null) {
+			return null; // Person not found
+		} else if (node.getValue().getTitle().equals(title) &&
+				node.getValue().getFirstName().equals(firstName) &&
+				node.getValue().getLastName().equals(lastName)) {
+			return node.getValue(); // Person found with matching title, firstName, and lastName
+		} else if (title.compareTo(node.getValue().getTitle()) < 0 ||
+				(title.equals(node.getValue().getTitle()) &&
+						(firstName.compareTo(node.getValue().getFirstName()) < 0 ||
+								(firstName.equals(node.getValue().getFirstName()) &&
+										lastName.compareTo(node.getValue().getLastName()) < 0)))) {
+			return searchHelper(node.getLeftNode(), title, firstName, lastName); // Search left subtree
+		} else {
+			return searchHelper(node.getRightNode(), title, firstName, lastName); // Search right subtree
+		}
+	}
+
+	// pre-order traversal
+	public void preOrderTraversal() {
+		preOrderHelper(root);
+	}
+
+	private void preOrderHelper(TreeNode node) {
+		if (node == null) {
+			return;
+		}
+		// Visit the root (process the Person object)
+		System.out.println(node.getValue());
+		preOrderHelper(node.getLeftNode()); // Recursively traverse left subtree
+		preOrderHelper(node.getRightNode()); // Recursively traverse right subtree
+	}
+
+	// In-order traversal
+	public void inOrderTraversal() {
+		inOrderHelper(root);
+	}
+
+	private void inOrderHelper(TreeNode node) {
+		if (node == null) {
+			return;
+		}
+		inOrderHelper(node.getLeftNode()); // Recursively traverse left subtree
+		// Visit the root (process the Person object)
+		System.out.println(node.getValue());
+		inOrderHelper(node.getRightNode()); // Recursively traverse right subtree
+	}
+
+	// Post-order traversal
+	public void postOrderTraversal() {
+		postOrderHelper(root);
+	}
+
+	private void postOrderHelper(TreeNode node) {
+		if (node == null) {
+			return;
+		}
+		postOrderHelper(node.getLeftNode()); // Recursively traverse left subtree
+		postOrderHelper(node.getRightNode()); // Recursively traverse right subtree
+		// Visit the root (process the Person object)
+		System.out.println(node.getValue());
+	}
 
 	// method to insert a person object into the BST based on hierarchy
 	public void insert(Person person) {
@@ -25,48 +91,50 @@ public class Dictionary {
 			root = new TreeNode(person);
 			return;
 		}
-		// comparison logic based on hierarchy (replace with your specific logic)
-		int comparison = person.getClass().getName().compareTo(node.getValue().getClass().getName());
+
+		// Use compareTitle method for hierarchy comparison
+		int comparison = compareTitle(person, node.getValue());
 
 		if (comparison < 0) {
-			// lower value (or same value for duplicates) goes to left subtree
+			// Lower value (person has lower hierarchy) goes to left subtree
 			if (node.getLeftNode() == null) {
 				node.setLeftNode(new TreeNode(person));
 			} else {
-				// check if the left Node has the same type (duplicate)
-				if (node.getLeftNode().getValue().getClass() == person.getClass()) {
-					// make the new person object the left Node (sequential insertion)
-					node.setLeftNode(new TreeNode(person));
-				} else {
-					insertHelper(node.getLeftNode(), person); // not a duplicate, recurse left
-				}
+				insertHelper(node.getLeftNode(), person); // recurse left for lower hierarchy
 			}
 		} else if (comparison > 0) {
-			// higher value goes to right subtree
+			// Higher value (person has higher hierarchy) goes to right subtree
 			if (node.getRightNode() == null) {
 				node.setRightNode(new TreeNode(person));
 			} else {
-				insertHelper(node.getRightNode(), person);
+				insertHelper(node.getRightNode(), person); // recurse right for higher hierarchy
 			}
 		} else {
-			// handle true duplicates
+			// Handle true duplicates (logic for handling duplicates remains as-is)
 			// - throw exception (maintain BST property)
 			// - implement a separate list for duplicates
 		}
 	}
 
 	// Helper method to compare person types (implementation provided)
-	private int comparePersonTypes(String type1, String type2) {
-		// Implement logic to compare person types based on your hierarchy
-		if (type1.equals(Customer.class.getName())) {
+	private int compareTitle(Person person1, Person person2) {
+		String title1 = person1.getTitle();
+		String title2 = person2.getTitle();
+
+		// Basic hierarchy based on title prefixes (modify as needed)
+		if (title1.startsWith("Customer")) {
 			return -1; // Customer has lower hierarchy
-		} else if (type1.equals(Member.class.getName())) {
-			return type2.equals(Employee.class.getName()) ? -1 : 1; // Member is between Customer and Employee
-		} else if (type1.equals(Employee.class.getName())) {
+		} else if (title1.startsWith("Member")) {
+			if (title2.startsWith("Employee")) {
+				return -1; // Member is between Customer and Employee
+			} else {
+				return 1; // Member has higher hierarchy than Customer
+			}
+		} else if (title1.startsWith("Employee")) {
 			return 1; // Employee has highest hierarchy
 		} else {
-			// Handle unexpected class types (optional)
-			throw new IllegalArgumentException("Unsupported person type: " + type1);
+			// Handle unexpected title formats (optional)
+			throw new IllegalArgumentException("Unsupported title format: " + title1);
 		}
 	}
 
@@ -81,6 +149,30 @@ public class Dictionary {
 			this.leftNode = null;
 			this.rightNode = null;
 		}
-		// Getter and setter methods for value, leftNode, rightNode (not shown)
+
+		// Getter and setter methods
+		public Person getValue() {
+			return value;
+		}
+
+		public void setValue(Person value) {
+			this.value = value;
+		}
+
+		public TreeNode getLeftNode() {
+			return leftNode;
+		}
+
+		public void setLeftNode(TreeNode leftNode) {
+			this.leftNode = leftNode;
+		}
+
+		public TreeNode getRightNode() {
+			return rightNode;
+		}
+
+		public void setRightNode(TreeNode rightNode) {
+			this.rightNode = rightNode;
+		}
 	}
 }
