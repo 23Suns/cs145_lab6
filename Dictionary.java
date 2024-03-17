@@ -153,18 +153,18 @@ public class Dictionary {
 
 	// modify method
 	public boolean modify(Person personToModify, Scanner scanner) {
-		// Find the person to modify in the BST by searching based on personToModify's
+		// find the person to modify in the BST by searching based on personToModify's
 		// details
 		TreeNode nodeToModify = searchHelper(root, personToModify.getTitle(), personToModify.getFirstName(),
 				personToModify.getLastName());
 
-		// Person not found
+		// person not found
 		if (nodeToModify == null) {
 			System.out.println("Person not found.");
 			return false;
 		}
 
-		// Display current information of the person
+		// display current information of the person
 		System.out.println("\nCurrent information:");
 		System.out.println(nodeToModify.getValue());
 
@@ -185,7 +185,7 @@ public class Dictionary {
 
 			int choice = Integer.parseInt(scanner.nextLine());
 
-			// Get new value based on user's choice
+			// get new value based on user's choice
 			String newValue;
 			switch (choice) {
 				case 0:
@@ -241,7 +241,7 @@ public class Dictionary {
 					break;
 			}
 
-			// Ask if user wants to modify another field
+			// prompt if user wants to modify another field
 			System.out.print("Do you want to modify another field (y/n)? ");
 		} while (scanner.nextLine().equalsIgnoreCase("y"));
 
@@ -249,7 +249,7 @@ public class Dictionary {
 		return true;
 	}
 
-	// Get the parent of a given Person object
+	// get the parent of a given Person object
 	public Person getParent(Person person) {
 		TreeNode parentNode = getParentNode(root, person);
 		return parentNode == null ? null : parentNode.getValue();
@@ -275,7 +275,7 @@ public class Dictionary {
 	}
 
 	// searching method
-	public Person search(String title, String firstName, String lastName) {
+	public Dictionary.TreeNode search(String title, String firstName, String lastName) {
 		return searchHelper(root, title, firstName, lastName);
 	}
 
@@ -308,7 +308,7 @@ public class Dictionary {
 		preOrderHelper(node.getRightNode()); // Recursively traverse right subtree
 	}
 
-	// In-order traversal
+	// in-order traversal
 	public void inOrderTraversal() {
 		inOrderHelper(root);
 	}
@@ -323,7 +323,7 @@ public class Dictionary {
 		inOrderHelper(node.getRightNode()); // Recursively traverse right subtree
 	}
 
-	// Post-order traversal
+	// post-order traversal
 	public void postOrderTraversal() {
 		postOrderHelper(root);
 	}
@@ -356,7 +356,7 @@ public class Dictionary {
 		}
 
 		// public void setValue(Person value) {
-		// 	this.value = value;
+		// this.value = value;
 		// }
 
 		public TreeNode getLeftNode() {
